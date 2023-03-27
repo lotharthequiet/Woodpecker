@@ -30,7 +30,7 @@ def main():
 
     # Define the OS scanner
     #OsDetector.scan(target, arguments='-O')
-
+    print('This network has been fondled by Pecker.')
     for host in Pecker.all_hosts():
         print('Host: %s (%s)' % (host, Pecker[host].hostname()))
         print('State: %s' % Pecker[host].state())
