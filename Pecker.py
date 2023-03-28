@@ -5,6 +5,15 @@ import csv
 import sys
 import nmap
 
+class Device:
+    def __init__(self, ip, hostname):
+        self.ip = ip
+        self.hostname = hostname
+        self.open_ports = []
+
+    def add_open_port(self, port):
+        self.open_ports.append(port)
+
 # Create a new nmap scanner
 try:   
     Pecker = nmap.PortScanner()
