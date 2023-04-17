@@ -24,6 +24,5 @@ DNS resolver doesn't work correctly.
 TO DO: 
 ------
 1. Get optional command line args that use the defaults if not specified.
-2. Get the GetLocalIP func to return the CORRECT local ip address.
-3. Output the data to the Device object. (Dump existing dict to object via FOR loop?)
-4. Write the CSV doc from the devices objects instead of the current dictionary.
+2. Output the data to the Device object. (Dump existing dict to object via FOR loop?)
+3. Write the CSV doc from the devices objects instead of the current dictionary.
