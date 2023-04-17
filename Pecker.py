@@ -6,6 +6,7 @@ import socket
 import sys
 import dns.resolver
 import logging
+import ipaddress
 
 """
 Logging Levels:
@@ -26,7 +27,21 @@ class Device:
     def add_open_port(self, port):
         self.open_ports.append(port)
 
+def check_ip(target):
+    try:
+        ip_address = ipaddress.ip_address(target)
+        # If the variable contains a single IP address
+        return [str(ip_address)]
+    except ValueError:
+        try:
+            ip_network = ipaddress.ip_network(target, strict=False)
+            # If the variable contains an IP network with subnet mask
+            return [str(ip) for ip in ip_network.hosts()]
+        except ValueError:
+            raise ValueError("Invalid IP address or network")
+
 def scan_ports(ip):
+    print(ip)
     try:
         Pecker = nmap.PortScanner()
     except nmap.PortScannerError:
@@ -75,12 +90,12 @@ def main():
     local_ip = get_local_ip()
     print(local_ip)
     PeckerParser = argparse.ArgumentParser(description='Pecker - Network Scanner')
-    PeckerParser.add_argument('ips', type=str, help='IP address(es) to scan. (10.0.0.1 OR 10.0.0.0/24)', default=local_ip)
+    PeckerParser.add_argument('target', type=str, help='IP address(es) to scan. (10.0.0.1 OR 10.0.0.0/24)', default=local_ip)
+    PeckerParser.add_argument('ports', type=str, help='Ports to scan (22 or 1-1024, etc.)')
     PeckerParser.add_argument('dns', type=str, help='DNS Server to use for name resolution. Default = 8.8.8.8', default='8.8.8.8')
     PeckerParser.add_argument('output', type=str, help='Output filename. Default = scan.csv', default='scan.csv')
     PeckerArgs = PeckerParser.parse_args()
-
-    if PeckerArgs.ips == local_ip:
+    if PeckerArgs.target == local_ip:
         PeckerLog.debug('Scanning the local ip address: ')
         PeckerLog.debug(local_ip)
     else:
@@ -88,7 +103,7 @@ def main():
         PeckerLog.debug(PeckerArgs.ips)
 
     results = []
-    for ip in PeckerArgs.ips:
+    for ip in check_ip(PeckerArgs.target):
         open_ports = scan_ports(ip)
         os_identification = scan_os(ip)
         dns_server = PeckerArgs.dns
