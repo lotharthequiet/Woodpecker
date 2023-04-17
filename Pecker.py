@@ -18,6 +18,13 @@ ERROR: More serious prob preventing app from running
 CRITICAL: Serious error
 """
 
+PeckerLog = logging.getLogger(__name__)
+PeckerLog.setLevel(logging.DEBUG)
+PeckerFMT = logging.Formatter('%(created)f:%(levelname)s:%(message)s')
+PeckerStream = logging.StreamHandler()
+PeckerStream.setFormatter(PeckerFMT)
+PeckerLog.addHandler(PeckerStream)
+
 class Device:
     def __init__(self, ip, hostname):
         self.ip = ip
@@ -78,15 +85,7 @@ def get_local_ip():
     return ip
 
 def main():
-
-    PeckerLog = logging.getLogger(__name__)
-    PeckerLog.setLevel(logging.DEBUG)
-    PeckerFMT = logging.Formatter('%(created)f:%(levelname)s:%(message)s')
-    PeckerStream = logging.StreamHandler()
-    PeckerStream.setFormatter(PeckerFMT)
-    PeckerLog.addHandler(PeckerStream)
-    PeckerLog.debug('Erecting the Pecker Network Scanner.')
-
+    PeckerLog.info('Erecting the Pecker Network Scanner.')
     local_ip = get_local_ip()
     print(local_ip)
     PeckerParser = argparse.ArgumentParser(description='Pecker - Network Scanner')
@@ -96,12 +95,11 @@ def main():
     PeckerParser.add_argument('output', type=str, help='Output filename. Default = scan.csv', default='scan.csv')
     PeckerArgs = PeckerParser.parse_args()
     if PeckerArgs.target == local_ip:
-        PeckerLog.debug('Scanning the local ip address: ')
-        PeckerLog.debug(local_ip)
+        PeckerLog.info('Scanning the local ip address: ')
+        PeckerLog.info(local_ip)
     else:
-        PeckerLog.debug('Scanning ip address(es): ')
-        PeckerLog.debug(PeckerArgs.ips)
-
+        PeckerLog.info('Scanning ip address(es): ')
+        PeckerLog.info(PeckerArgs.ips)
     results = []
     for ip in check_ip(PeckerArgs.target):
         open_ports = scan_ports(ip)
@@ -110,7 +108,6 @@ def main():
         hostname = resolve_hostname(ip, dns_server)
         result = {'IP': ip, 'Open Ports': open_ports, 'OS Identification': os_identification, 'Hostname': hostname}
         results.append(result)
-
     with open(PeckerArgs.output, mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=['IP', 'Open Ports', 'OS Identification', 'Hostname'], delimiter='\t')
         writer.writeheader()
