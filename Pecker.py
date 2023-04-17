@@ -16,6 +16,7 @@ INFO: Confirmation of things working correctly
 WARNING: (Default level) Indication things are not so good
 ERROR: More serious prob preventing app from running
 CRITICAL: Serious error
+
 """
 
 PeckerLog = logging.getLogger(__name__)
