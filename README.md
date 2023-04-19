@@ -1,5 +1,5 @@
-# Pecker
-Pecker is a network scanner.
+# Woodpecker
+Woodpecker is a network scanner.
 
 
 Dependencies: 
