@@ -86,30 +86,30 @@ def get_local_ip():
     return ip
 
 def main():
-    PeckerLog.info('Erecting the Pecker Network Scanner.')
+    PeckerLog.info('Starting the Woodpecker Network Scanner.')
     local_ip = get_local_ip()
     print(local_ip)
-    PeckerParser = argparse.ArgumentParser(description='Pecker - Network Scanner')
-    PeckerParser.add_argument('target', type=str, help='IP address(es) to scan. (10.0.0.1 OR 10.0.0.0/24)', default=local_ip)
-    PeckerParser.add_argument('ports', type=str, help='Ports to scan (22 or 1-1024, etc.)')
-    PeckerParser.add_argument('dns', type=str, help='DNS Server to use for name resolution. Default = 8.8.8.8', default='8.8.8.8')
-    PeckerParser.add_argument('output', type=str, help='Output filename. Default = scan.csv', default='scan.csv')
-    PeckerArgs = PeckerParser.parse_args()
-    if PeckerArgs.target == local_ip:
+    Parser = argparse.ArgumentParser(description='Pecker - Network Scanner')
+    Parser.add_argument('target', type=str, help='IP address(es) to scan. (10.0.0.1 OR 10.0.0.0/24)', default=local_ip)
+    Parser.add_argument('ports', type=str, help='Ports to scan (22 or 1-1024, etc.)')
+    Parser.add_argument('dns', type=str, help='DNS Server to use for name resolution. Default = 8.8.8.8', default='8.8.8.8')
+    Parser.add_argument('output', type=str, help='Output filename. Default = scan.csv', default='scan.csv')
+    Args = Parser.parse_args()
+    if Args.target == local_ip:
         PeckerLog.info('Scanning the local ip address: ')
         PeckerLog.info(local_ip)
     else:
         PeckerLog.info('Scanning ip address(es): ')
-        PeckerLog.info(PeckerArgs.ips)
+        PeckerLog.info(Args.ips)
     results = []
-    for ip in check_ip(PeckerArgs.target):
+    for ip in check_ip(Args.target):
         open_ports = scan_ports(ip)
         os_identification = scan_os(ip)
-        dns_server = PeckerArgs.dns
+        dns_server = Args.dns
         hostname = resolve_hostname(ip, dns_server)
         result = {'IP': ip, 'Open Ports': open_ports, 'OS Identification': os_identification, 'Hostname': hostname}
         results.append(result)
-    with open(PeckerArgs.output, mode='w', newline='') as file:
+    with open(Args.output, mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=['IP', 'Open Ports', 'OS Identification', 'Hostname'], delimiter='\t')
         writer.writeheader()
         for result in results:
