@@ -19,12 +19,12 @@ CRITICAL: Serious error
 
 """
 
-PeckerLog = logging.getLogger(__name__)
-PeckerLog.setLevel(logging.DEBUG)
-PeckerFMT = logging.Formatter('%(created)f:%(levelname)s:%(message)s')
-PeckerStream = logging.StreamHandler()
-PeckerStream.setFormatter(PeckerFMT)
-PeckerLog.addHandler(PeckerStream)
+woodpeckerlog = logging.getLogger(__name__)
+woodpeckerlog.setLevel(logging.DEBUG)
+fmt = logging.Formatter('%(created)f:%(levelname)s:%(message)s')
+stream = logging.StreamHandler()
+stream.setFormatter(fmt)
+woodpeckerlog.addHandler(stream)
 
 class Device:
     def __init__(self, ip, hostname):
