@@ -21,21 +21,22 @@ loghandler = logging.FileHandler('woodpecker.log')
 loghandler.setFormatter(fmt)
 woodpeckerlog.addHandler(loghandler)
 
-VERSION = "0.1 Alpha"
-TARGETS = ["10.10.80.3","10.10.80.25","10.10.80.35"]
-PORTS = "1-1025"
-DNS = dns_resolver.nameservers
-OUTPUT = "scan.csv"
+class globals:
+    version = "0.1 Alpha"
+    targets = ["10.10.80.3","10.10.80.25","10.10.80.35"]
+    ports = "1-1025"
+    dns = dns_resolver.nameservers
+    output = "scan.csv"
 
 def main():
     woodpeckerlog.info("Woodpecker started")
-    resources.wpgraphics.show_title(VERSION)
+    resources.wpgraphics.show_title(globals.version)
     resources.wplib.check_nmap()
-    print("Scanning target(s):", TARGETS)
-    print("Scanning ports:", PORTS)
-    print("Resolving from DNS:", DNS)
-    print("Output filename:", OUTPUT)
-    for target in TARGETS:
+    print("Scanning target(s):", globals.targets)
+    print("Scanning ports:", globals.ports)
+    print("Resolving from DNS:", globals.dns)
+    print("Output filename:", globals.output)
+    for target in globals.targets:
         print("Scanning:", target)
         if resources.wplib.ping(target):
             my_device = resources.device()
@@ -56,7 +57,7 @@ def main():
             my_device.add_ip(target)
             my_device.hostname = "Not Responding"
             my_device.show_dev()
-    with open(OUTPUT, 'w') as csvfile:
+    with open(globals.output, 'w') as csvfile:
         csvfile.write("IP Address,Hostname,OS Info,Open TCP Ports,Open UDP Ports,Log4J Present,Log4J Vulnerable\n")
         for device in resources.device.devices:
             row = resources.device.to_csv()
