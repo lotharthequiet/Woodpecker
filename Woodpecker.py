@@ -1,119 +1,66 @@
 #!/usr/bin/env python3
-import nmap
-import argparse
-import csv
-import socket
-import sys
-import dns.resolver
+
+"""
+Woodpecker Network Scanner version 0.1 Alpha
+Written by: Lothar TheQuiet
+Email: lotharthequiet@gmail.com
+Github: https://github.com/lotharthequiet
+"""
+
+import time
 import logging
-import ipaddress
+import resources
+import dns.resolver
 
-"""
-Logging Levels:
-------------------------------------------------------------
-DEBUG: Detailed info
-INFO: Confirmation of things working correctly
-WARNING: (Default level) Indication things are not so good
-ERROR: More serious prob preventing app from running
-CRITICAL: Serious error
-
-"""
+dns_resolver = dns.resolver.Resolver()
 
 woodpeckerlog = logging.getLogger(__name__)
 woodpeckerlog.setLevel(logging.DEBUG)
-fmt = logging.Formatter('%(created)f:%(levelname)s:%(message)s')
-stream = logging.StreamHandler()
-stream.setFormatter(fmt)
-woodpeckerlog.addHandler(stream)
+fmt = logging.Formatter('%(levelname)s:%(message)s')
+loghandler = logging.FileHandler('woodpecker.log')
+loghandler.setFormatter(fmt)
+woodpeckerlog.addHandler(loghandler)
 
-class Device:
-    def __init__(self, ip, hostname):
-        self.ip = ip
-        self.hostname = hostname
-        self.open_ports = []
-
-    def add_open_port(self, port):
-        self.open_ports.append(port)
-
-def check_ip(target):
-    try:
-        ip_address = ipaddress.ip_address(target)
-        # If the variable contains a single IP address
-        return [str(ip_address)]
-    except ValueError:
-        try:
-            ip_network = ipaddress.ip_network(target, strict=False)
-            # If the variable contains an IP network with subnet mask
-            return [str(ip) for ip in ip_network.hosts()]
-        except ValueError:
-            raise ValueError("Invalid IP address or network")
-
-def scan_ports(ip):
-    print(ip)
-    try:
-        Pecker = nmap.PortScanner()
-    except nmap.PortScannerError:
-        print('Nmap not found', sys.exc_info()[0])
-        sys.exit(1)
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        sys.exit(1)
-    Pecker.scan(ip, arguments='-sS')
-    return Pecker[ip]['tcp'].keys()
-
-def scan_os(ip):
-    try:
-        Pecker = nmap.PortScanner()
-    except nmap.PortScannerError:
-        print('Nmap not found', sys.exc_info()[0])
-        sys.exit(1)
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        sys.exit(1)
-    Pecker.scan(ip, arguments='-O')
-    return Pecker[ip]['osmatch'][0]['name']
-
-def resolve_hostname(ip, dns_server):
-    resolver = dns.resolver.Resolver(configure=False)
-    resolver.nameservers = [dns_server] 
-    return resolver.query(ip, "PTR")[0].to_text()
-
-def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = s.getsockname()[0]
-    s.close()
-    return ip
+VERSION = "0.1 Alpha"
+TARGETS = ["10.10.80.3","10.10.80.25","10.10.80.35"]
+PORTS = "1-1025"
+DNS = dns_resolver.nameservers
+OUTPUT = "scan.csv"
 
 def main():
-    PeckerLog.info('Starting the Woodpecker Network Scanner.')
-    local_ip = get_local_ip()
-    print(local_ip)
-    Parser = argparse.ArgumentParser(description='Pecker - Network Scanner')
-    Parser.add_argument('target', type=str, help='IP address(es) to scan. (10.0.0.1 OR 10.0.0.0/24)', default=local_ip)
-    Parser.add_argument('ports', type=str, help='Ports to scan (22 or 1-1024, etc.)')
-    Parser.add_argument('dns', type=str, help='DNS Server to use for name resolution. Default = 8.8.8.8', default='8.8.8.8')
-    Parser.add_argument('output', type=str, help='Output filename. Default = scan.csv', default='scan.csv')
-    Args = Parser.parse_args()
-    if Args.target == local_ip:
-        PeckerLog.info('Scanning the local ip address: ')
-        PeckerLog.info(local_ip)
-    else:
-        PeckerLog.info('Scanning ip address(es): ')
-        PeckerLog.info(Args.ips)
-    results = []
-    for ip in check_ip(Args.target):
-        open_ports = scan_ports(ip)
-        os_identification = scan_os(ip)
-        dns_server = Args.dns
-        hostname = resolve_hostname(ip, dns_server)
-        result = {'IP': ip, 'Open Ports': open_ports, 'OS Identification': os_identification, 'Hostname': hostname}
-        results.append(result)
-    with open(Args.output, mode='w', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=['IP', 'Open Ports', 'OS Identification', 'Hostname'], delimiter='\t')
-        writer.writeheader()
-        for result in results:
-            writer.writerow(result)
+    woodpeckerlog.info("Woodpecker started")
+    resources.wpgraphics.show_title(VERSION)
+    resources.wplib.check_nmap()
+    print("Scanning target(s):", TARGETS)
+    print("Scanning ports:", PORTS)
+    print("Resolving from DNS:", DNS)
+    print("Output filename:", OUTPUT)
+    for target in TARGETS:
+        print("Scanning:", target)
+        if resources.wplib.ping(target):
+            my_device = resources.device()
+            my_device.add_ip(target)
+            for port in resources.wplib.scan_tcpports(target):
+                my_device.add_tcpport(port)
+            for port in resources.wplib.scan_udpports(target):
+                my_device.add_udpport(port)
+            if "80" in my_device.get_tcpports():
+                l4jresults = resources.wplib.check_log4j(target)
+                my_device.log4j = l4jresults[0]
+            my_device.osinfo = resources.wplib.scan_os(target)
+            my_device.hostname = resources.wplib.get_hostname(target)
+            my_device.show_dev()
+        else:
+            print("Host:", target, "does not respond.")
+            my_device = resources.device()
+            my_device.add_ip(target)
+            my_device.hostname = "Not Responding"
+            my_device.show_dev()
+    with open(OUTPUT, 'w') as csvfile:
+        csvfile.write("IP Address,Hostname,OS Info,Open TCP Ports,Open UDP Ports,Log4J Present,Log4J Vulnerable\n")
+        for device in resources.device.devices:
+            row = resources.device.to_csv()
+            csvfile.write(row)
 
 if __name__ == "__main__":
     main()
