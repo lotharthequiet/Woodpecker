@@ -1,31 +1,53 @@
 #!/usr/bin/env python3
-
-"""
-Woodpecker Network Scanner version 0.1 Alpha
-Written by: Lothar TheQuiet
-Email: lotharthequiet@gmail.com
-Github: https://github.com/lotharthequiet
-"""
-
 import time
 import logging
 import resources
 import dns.resolver
+from decouple import config
+
+__author__ = "Lothar TheQuiet"
+__email__ = "lotharthequiet@gmail.com"
+__version__ = "0.1"
+__status__ = "Alpha"
+
 
 dns_resolver = dns.resolver.Resolver()
 
 woodpeckerlog = logging.getLogger(__name__)
+
 woodpeckerlog.setLevel(logging.DEBUG)
+
 fmt = logging.Formatter('%(levelname)s:%(message)s')
+
 loghandler = logging.FileHandler('woodpecker.log')
+
 loghandler.setFormatter(fmt)
+
 woodpeckerlog.addHandler(loghandler)
 
-VERSION = "0.1 Alpha"
-TARGETS = ["10.10.80.3","10.10.80.25","10.10.80.35"]
-PORTS = "1-1025"
-DNS = dns_resolver.nameservers
-OUTPUT = "scan.csv"
+
+# STATIC GLOBALS, these sorta suck
+class SetGlobal:
+    VERSION = "0.1 Alpha"
+    TARGETS = ["10.10.80.3", "10.10.80.25", "10.10.80.35"]
+    PORTS = "1-1025"
+    DNS = dns_resolver.nameservers
+    OUTPUT = "scan.csv"
+
+
+class DynamicGlobals:
+    '''
+    Throw these in a .env file so you can change them as needed instead of hardcoding them AKA flavortown
+    '''
+    VERSION = config('VERSION')
+    TARGETS = config('TARGETS')
+    PORTS = config('PORTS')
+    DNS = dns_resolver.nameservers
+    if config('OUTPUT') is not None:
+        OUTPUT = "scan.csv"
+    else:
+        OUTPUT = config('OUTPUT')
+
 
 def main():
     woodpeckerlog.info("Woodpecker started")
@@ -61,6 +83,7 @@ def main():
         for device in resources.device.devices:
             row = resources.device.to_csv()
             csvfile.write(row)
+
 
 if __name__ == "__main__":
     main()
