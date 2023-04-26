@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 
-"""
-Woodpecker Network Scanner version 0.1 Alpha
-Written by: Lothar TheQuiet
-Email: lotharthequiet@gmail.com
-Github: https://github.com/lotharthequiet
-"""
-
 import time
 import logging
 import resources
 import dns.resolver
+from decouple import config
+
+__author__ = "Lothar TheQuiet"
+__email__ = "lotharthequiet@gmail.com"
+__version__ = "0.1"
+__status__ = "Alpha"
 
 dns_resolver = dns.resolver.Resolver()
 
@@ -22,11 +21,14 @@ loghandler.setFormatter(fmt)
 woodpeckerlog.addHandler(loghandler)
 
 class globals:
-    version = "0.1 Alpha"
-    targets = ["10.10.80.3","10.10.80.25","10.10.80.35"]
-    ports = "1-1025"
+    version = config('version')
+    targets = config('targets')
+    ports = config('ports')
     dns = dns_resolver.nameservers
-    output = "scan.csv"
+    if config('output') is not None:
+        output = "scan.csv"
+    else:
+        output = config('output')
 
 def main():
     woodpeckerlog.info("Woodpecker started")
