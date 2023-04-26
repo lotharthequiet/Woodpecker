@@ -67,15 +67,19 @@ class device:
             return csv_string
     
 class log:
-    def __init__(self, time, message):
+    def __init__(self, time, level, message):
         self.time = time
+        self.level = level
         self.message = message
 
     def set_time(self, time):
         self.time = time
 
+    def set_level(self, level):
+        self.level = level
+
     def set_message(self, message):
         self.message = message
 
     def show_log(self):
-        print("Time:", self.time, "Message:", self.message)
+        print(self.time,":",self.level,":",self.message)
