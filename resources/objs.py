@@ -62,7 +62,6 @@ class device:
         string = "IP:", self.ip, "Hostname:", self.hostname, "OS:", self.osinfo, "Open TCP Ports:", self.tcpports, "Open UDP Ports:", self.udpports, "Log4J Present:", self.log4j, "Log4J Vulnerable:", self.log4j_vuln
         return string
 
-    @classmethod
     def to_csv(self):
         csv_string = f"{self.ip},{self.hostname},{self.osinfo},{','.join(map(str, self.tcpports))},{','.join(map(str, self.udpports))},{int(self.log4j)},{int(self.log4j_vuln)}\n"
         return csv_string
