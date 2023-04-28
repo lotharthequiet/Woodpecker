@@ -5,6 +5,7 @@ import logging
 import resources
 import dns.resolver
 from decouple import config
+from decouple import Csv
 
 __author__ = "Lothar TheQuiet"
 __email__ = "lotharthequiet@gmail.com"
@@ -22,7 +23,7 @@ woodpeckerlog.addHandler(loghandler)
 
 class globals:
     version = config('VERSION')
-    targets = config('TARGETS')
+    targets = config('TARGETS', cast=Csv())
     #targets = ["10.0.0.31"]
     ports = config('PORTS')
     dns = dns_resolver.nameservers
