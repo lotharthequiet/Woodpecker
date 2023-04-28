@@ -11,10 +11,10 @@ class device:
         self.osinfo = ""
         self.log4j = False
         self.log4j_vuln = False
-        self.openshares = False
-        self.shareprotocol = ""
-        self.shares = []
-        device.devices.append(self)
+        #self.openshares = False
+        #self.shareprotocol = ""
+        #self.shares = []
+        #device.devices.append(self)
 
     def get_ip(self):
         return self.ip
