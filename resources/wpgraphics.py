@@ -12,9 +12,17 @@ def show_title(ver):
     print("\033[1;31m|__/|__/\____/\____/\__,_/", end="")
     print("\033[1;96m .___/\___/\___/_/|_|\___/_/     ")
     print("\033[1;96m                        /_/                           \033[0;0m")
-    print("    Network Scanner          Version:", ver)
+    print("\033[1;31mNetwork Vulnerability T\033[1;96mester       Version:", ver, "\033[0;0m")
     print("-----------------------------------------------------------")
     print("Written by: Lothar TheQuiet")
     print("lotharthequiet@gmail.com")
     print("")
     print("")
+
+def progressbar(progress, total):
+    percent = 100 * (progress / float(total))
+    bar = '\033[32m=\033[0m' * int(percent) + '-' * (100 - int(percent))
+    if progress == total:
+        print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m Completed!", end="\n")
+    else:
+        print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m {percent:.2f}%", end="\r")
