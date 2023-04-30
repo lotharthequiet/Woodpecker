@@ -39,4 +39,4 @@ TO DO:
 14. Follow the Pentester Cheat Sheets for more
 15. Add time of scan
 16. add progress bar
-17. Put globals in class
+
