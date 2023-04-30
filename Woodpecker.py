@@ -48,21 +48,28 @@ def main():
             my_device = resources.device()
             my_device.add_ip(target)
             i = 1
-            resources.wpgraphics.progressbar(i+1, globals.scans)
-            for port in resources.wplib.scan_tcpports(target):
+            resources.wpgraphics.progressbar(i, globals.scans)
+            tcpports = resources.wplib.scan_tcpports(target)
+            for port in tcpports:
                 my_device.add_tcpport(port)
-            resources.wpgraphics.progressbar(i+1, globals.scans)
-            for port in resources.wplib.scan_udpports(target):
+            i += 1
+            resources.wpgraphics.progressbar(i, globals.scans)
+            udpports = resources.wplib.scan_udpports(target)
+            for port in udpports:
                 my_device.add_udpport(port)
-            resources.wpgraphics.progressbar(i+1, globals.scans)
-            if "80" in my_device.get_tcpports():
+            i += 1
+            resources.wpgraphics.progressbar(i, globals.scans)
+            if "80" in tcpports:
                 l4jresults = resources.wplib.check_log4j(target)
                 my_device.log4j = l4jresults[0]
-            resources.wpgraphics.progressbar(i+1, globals.scans)
+            i += 1
+            resources.wpgraphics.progressbar(i, globals.scans)
             my_device.osinfo = resources.wplib.scan_os(target)
-            resources.wpgraphics.progressbar(i+1, globals.scans)
+            i += 1
+            resources.wpgraphics.progressbar(i, globals.scans)
             my_device.hostname = resources.wplib.get_hostname(target)
-            resources.wpgraphics.progressbar(i+1, globals.scans)
+            i += 1
+            resources.wpgraphics.progressbar(i, globals.scans)
             my_device.show_dev()
         else:
             print("Host:", target, "does not respond.")
@@ -70,9 +77,11 @@ def main():
             my_device.add_ip(target)
             my_device.hostname = "Not Responding"
             my_device.show_dev()
-    with open(globals.output, 'w') as csvfile:
+    with open(globals.output, mode='w') as csvfile:
         csvfile.write("IP Address,Hostname,OS Info,Open TCP Ports,Open UDP Ports,Log4J Present,Log4J Vulnerable\n")
-        for dev in resources.device.devices:
+        devlist = re
+        for device in devlist:
+            print(resources.device.get_ip())
             device = resources.device.to_csv() 
             csvfile.write(device)
 

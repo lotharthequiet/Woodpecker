@@ -1,7 +1,6 @@
 #!/bin/python3
 
 class device:
-    devices = []
 
     def __init__(self):
         self.ip = ""
