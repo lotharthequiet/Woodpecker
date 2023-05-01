@@ -1,0 +1,8 @@
+VERSION = "0.1 Alpha"
+TARGETS = 10.0.0.31, 10.0.0.50
+PORTS = "1-1025"
+DNS = dns_resolver.nameservers
+OUTPUT = "scan.csv"
+SCANS = 6
+LOGPATH = "logs"
+RESPATH = "resources"
