@@ -10,10 +10,6 @@ class device:
         self.osinfo = ""
         self.log4j = False
         self.log4j_vuln = False
-        #self.openshares = False
-        #self.shareprotocol = ""
-        #self.shares = []
-        #device.devices.append(self)
 
     def get_ip(self):
         return self.ip
@@ -65,20 +61,3 @@ class device:
         csv_string = f"{self.ip},{self.hostname},{self.osinfo},{','.join(map(str, self.tcpports))},{','.join(map(str, self.udpports))},{int(self.log4j)},{int(self.log4j_vuln)}\n"
         return csv_string
     
-class log:
-    def __init__(self, time, level, message):
-        self.time = time
-        self.level = level
-        self.message = message
-
-    def set_time(self, time):
-        self.time = time
-
-    def set_level(self, level):
-        self.level = level
-
-    def set_message(self, message):
-        self.message = message
-
-    def show_log(self):
-        print(self.time,":",self.level,":",self.message)

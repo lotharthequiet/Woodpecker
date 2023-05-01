@@ -1,6 +1,8 @@
 #!/bin/python3
 
+import os
 import sys
+import platform
 import nmap
 import ipaddress
 import subprocess
@@ -9,10 +11,39 @@ import re
 import requests
 from datetime import datetime
 
+def check_os():
+    system = platform.system()
+    if system == "Windows":
+        hostosinfo = "Windows"
+    elif system == "Linux":
+        hostosinfo = "Linux"
+    elif system == "Darwin":
+        hostosinfo = "MacOS"
+    else:
+        hostosinfo = "Unknown OS"
+    return hostosinfo
+
+def systemcheck(logpath, respath):
+    print("Host OS: ", end="")
+    print(check_os())
+    print("Checking system...", end="")
+    if not os.path.exists(logpath) and not os.path.exists(respath):
+        osinfo = False
+        nmap = False
+    else:
+        osinfo = True
+        nmap = check_nmap()
+    if not osinfo and nmap:
+        print("System check failed.")
+        return False
+    else:
+        print("System check passed.")
+        return True
+        
 def get_time():
     try:
         now = datetime.now()
-        time = now.strftime("%H:%M:%S")
+        time = now.strftime("%H%M%S")
         return time
     except:
         print("time not retrieved.")
@@ -21,11 +52,10 @@ def check_nmap():
     try:
         woodpecker = nmap.PortScanner()    
     except nmap.PortScannerError:
-        print("Nmap not found", sys.exc_info()[0])
-        sys.exit(1)
+        return False
     except:
-        print("Unexpected error:", sys.exc_info()[0])
-        sys.exit(1)
+        return False
+    return True
 
 def check_ip(address):
     try:
@@ -41,11 +71,12 @@ def check_ip(address):
             raise ValueError("Invalid IP address or network")
 
 def ping(address):
-    try:
-        subprocess.check_output(["ping", "-c", "5", address])
-        return True
-    except subprocess.CalledProcessError:
-        return False
+    with open(os.devnull, 'w') as null:
+        try:
+            subprocess.check_call(["ping", "-c", "5", address], stdout=null, stderr=null)
+            return True
+        except subprocess.CalledProcessError:
+            return False
     
 def scan_tcpports(address):
     try:
