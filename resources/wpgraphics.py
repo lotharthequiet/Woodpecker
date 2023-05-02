@@ -27,3 +27,6 @@ def progressbar(progress, total):
         print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m {percent:.2f}%\n\n", end="")
     else:
         print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m {percent:.2f}%", end="\r")
+
+def drawdiv():
+    print("------------------------------------------------------------------------------------------------------")

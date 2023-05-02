@@ -4,6 +4,7 @@ class device:
 
     def __init__(self):
         self.ip = ""
+        self.mac = ""
         self.hostname = ""
         self.tcpports = []
         self.udpports = []
@@ -16,6 +17,12 @@ class device:
     
     def add_ip(self, ip):
         self.ip = ip
+
+    def get_mac(self):
+        return self.mac
+
+    def add_mac(self, mac):
+        self.mac = mac
 
     def get_hostname(self):
         return self.hostname

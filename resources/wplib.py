@@ -43,7 +43,7 @@ def systemcheck(logpath, respath):
 def get_time():
     try:
         now = datetime.now()
-        time = now.strftime("%H%M%S")
+        time = now.strftime("%H:%M:%S")
         return time
     except:
         print("time not retrieved.")
@@ -69,6 +69,14 @@ def check_ip(address):
             return [str(ip) for ip in ip_network.hosts()]
         except ValueError:
             raise ValueError("Invalid IP address or network")
+
+def get_mac(address):
+    try:
+        output = subprocess.check_output(["arp", "-n", address]).decode("utf-8")
+        mac = output.split()[3]
+        return mac
+    except subprocess.CalledProcessError:
+        return "00:00:00:00:00:00"
 
 def ping(address):
     with open(os.devnull, 'w') as null:
