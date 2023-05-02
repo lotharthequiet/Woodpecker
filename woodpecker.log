@@ -1,25 +1,17 @@
-INFO:10:39:45Woodpecker started
-
-INFO-10:43:27 - Woodpecker started
-
-INFO,10:44:19,Woodpecker started
-
 INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
-INFO,Woodpecker started
+INFO,<function get_time at 0x104bad790>,Woodpecker started
+INFO,<function get_time at 0x102b73040>,Woodpecker started
+INFO,<function get_time at 0x104291790>,Woodpecker started
+INFO,<function get_time at 0x100bf7700>,Woodpecker started
+INFO,<function get_time at 0x102103700>,Woodpecker started
+05/05/01/23/2023 04:29:49 PM Woodpecker started
+31/05/01/23/2023 04:31:08PM Woodpecker started
+05/01/23 04:32:09PM Woodpecker started
+05/01/23 04:49:03PM Woodpecker started
+05/01/23 11:11:31PM Woodpecker started
+05/01/23 11:12:50PM Woodpecker started
+05/01/23 11:22:00PM Woodpecker started
+05/01/23 11:28:08PM Woodpecker started
+05/02/23 12:09:46AM Woodpecker started
+05/02/23 12:10:33AM Woodpecker started
+05/02/23 12:19:03AM Woodpecker started
