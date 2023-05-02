@@ -1,0 +1,10 @@
+VERSION = "0.1 Alpha"
+TARGETS = 10.0.0.31, 10.0.0.83
+PORTS = "1-1025"
+DNS = dns_resolver.nameservers
+OUTPUT = "scan.csv"
+SCANS = 7
+LOGPATH = "logs"
+RESPATH = "resources"
+RESOUT = "text"
+CSVHEADERS = IP Address,MAC Address,Open TCP Ports,Open UDP Ports,Log4J Present,Log4J Vulnerable,OS Info,Hostname
