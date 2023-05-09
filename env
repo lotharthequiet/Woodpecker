@@ -1,6 +1,6 @@
 VERSION = "0.1 Alpha"
-TARGETS = 10.0.0.31, 10.0.0.83
-PORTS = "1-1025"
+TARGETS = 10.0.0.31
+PORTS = "1-65535"
 DNS = dns_resolver.nameservers
 OUTPUT = "scan.csv"
 SCANS = 7

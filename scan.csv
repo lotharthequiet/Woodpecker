@@ -1,3 +1,2 @@
 IP Address,MAC Address,Open TCP Ports,Open UDP Ports,Log4J Present,Log4J Vulnerable,OS Info,Hostname
-10.0.0.31,3c:22:fb:7f:23:72,"dict_keys([22, 80, 88, 445, 515, 625, 3031, 5000, 5900, 7000, 49152])","dict_keys([69, 88, 137, 138, 161, 512, 518, 1069, 5353])",,,Apple macOS 10.14 (Mojave) (Darwin 18.2.0 - 18.6.0),Unable to resolve hostname.
-10.0.0.83,3c:22:fb:85:58:89,"dict_keys([88, 5900])","dict_keys([69, 88, 137, 138, 5353])",,,Apple Mac OS X 10.11 (El Capitan) or iOS 12.4 - 13.0 (Darwin 15.6.0 - 19.0.0),Unable to resolve hostname.
+10.0.0.31,3c:22:fb:7f:23:72,"{22: 'ssh', 80: 'http', 88: 'kerberos', 445: 'microsoft-ds', 515: 'printer', 625: 'dec_dlm', 3031: 'eppc', 5000: 'commplex-main', 5900: 'rfb', 7000: 'afs3-fileserver', 49152: 'Unknown'}",,,,Apple macOS 10.14 (Mojave) (Darwin 18.2.0 - 18.6.0),Unable to resolve hostname.
