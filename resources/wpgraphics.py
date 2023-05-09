@@ -20,13 +20,31 @@ def show_title(ver):
     print("")
     print("")
 
-def progressbar(progress, total):
+def progressbar(progress, total, barcolor):
+    endcolor = "\033[0;0m"
+    if barcolor == "none":
+        startcolor = endcolor
+    if barcolor == "green":
+        startcolor = "\033[1;32m"
+    if barcolor == "red":
+        startcolor = "\033[1;31m"
+    if barcolor == "blue":
+        startcolor = "\033[1;96m"
     percent = 100 * (progress / float(total))
-    bar = "\033[32m=\033[0m" * int(percent) + "-" * (100 - int(percent))
+    bar = f"{startcolor}={endcolor}" * int(percent) + "-" * (100 - int(percent))
     if percent == 100:
-        print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m {percent:.2f}%\n\n", end="")
+        print(f"\r{startcolor}|{endcolor}{bar}{startcolor}|{endcolor} {percent:.2f}%\n\n", end="")
     else:
-        print(f"\r\033[32m|\033[0m{bar}\033[32m|\033[0m {percent:.2f}%", end="\r")
+        print(f"\r{startcolor}|{endcolor}{bar}{startcolor}|{endcolor} {percent:.2f}%", end="\r")
 
-def drawdiv():
-    print("------------------------------------------------------------------------------------------------------")
+def drawdiv(divcolor):
+    endcolor = "\033[0;0m"
+    if divcolor == "none":
+        startcolor = endcolor
+    if divcolor == "green":
+        startcolor = "\033[1;32m"
+    if divcolor == "red":
+        startcolor = "\033[1;31m"
+    if divcolor == "blue":
+        startcolor = "\033[1;96m"
+    print(f"{startcolor}+----------------------------------------------------------------------------------------------------+{endcolor}")

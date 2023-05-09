@@ -9,6 +9,7 @@ import subprocess
 import socket
 import re
 import requests
+import portend
 from datetime import datetime
 
 def check_os():
@@ -43,7 +44,7 @@ def systemcheck(logpath, respath):
 def get_time():
     try:
         now = datetime.now()
-        time = now.strftime("%H:%M:%S")
+        time = now.strftime("%I:%M:%S %p")
         return time
     except:
         print("time not retrieved.")
@@ -86,22 +87,62 @@ def ping(address):
         except subprocess.CalledProcessError:
             return False
     
-def scan_tcpports(address):
-    try:
-        woodpecker = nmap.PortScanner()
-        woodpecker.scan(address, arguments='-sS')
-        return woodpecker[address]['tcp'].keys()
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        sys.exit(1)
-
-def scan_udpports(address):
-    try:
-        woodpecker = nmap.PortScanner()
-        woodpecker.scan(address, arguments='-sU')
-        return woodpecker[address]['udp'].keys()
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
+def scan_ports(address, sub):
+    if sub == "tcp":
+        try:
+            woodpecker = nmap.PortScanner()
+            woodpecker.scan(address, arguments='-sS')
+            tcplist =  woodpecker[address]['tcp'].keys()
+            tcpsrvlist = []
+            for port in tcplist:
+                try:
+                    srv = socket.getservbyport(port, 'tcp')
+                except OSError:
+                    srv = "Unknown"
+                tcpsrvlist.append(srv)
+                nm = nmap.PortScanner()
+                nm.scan(address, str(port), arguments='-sV')
+                verlist = []
+                try:
+                    ver = nm[address]['tcp'][port]['version']
+                    verlist.append(ver)
+                except KeyError:
+                    ver = "Not found."
+                except ValueError:
+                    ver = "Not found."
+            tcpports = dict(zip(tcplist, tcpsrvlist, ver))
+            return tcpports
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+            sys.exit(1)
+    elif sub == "udp":
+        try:
+            woodpecker = nmap.PortScanner()
+            woodpecker.scan(address, arguments='-sU')
+            udplist = woodpecker[address]['udp'].keys()
+            udpsrvlist = []
+            for port in udplist:
+                try:
+                    srv = socket.getservbyport(port, 'udp')
+                except OSError:
+                    srv = "Unknown"
+                udpsrvlist.append(srv)
+                #nm = nmap.PortScanner()
+                #nm.scan(address, str(port), arguments='-sV')
+                #verlist = []
+                #try:
+                #    ver = nm[address]['udp'][port]['version']
+                #    verlist.append(ver)
+                #except KeyError:
+                #    ver = "Not found."
+                #except ValueError:
+                #    ver = "Not found."
+            udpports = dict(zip(udplist, udpsrvlist))
+            return udpports
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+    else:
+        print("Subprotocol error.")
         
 def scan_os(address):
     try:
